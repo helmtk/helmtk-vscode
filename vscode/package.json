@@ -1,0 +1,83 @@
+{
+  "name": "helmtk",
+  "displayName": "Helmtk",
+  "description": "Syntax highlighting and formatting for Helmtk template language",
+  "version": "0.2.0",
+  "publisher": "helmtk",
+  "main": "./extension.js",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Formatters"
+  ],
+  "activationEvents": [
+    "onLanguage:helmtk"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "helmtk",
+        "aliases": [
+          "Helmtk",
+          "helmtk"
+        ],
+        "extensions": [
+          ".helmtk"
+        ],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icon.png",
+          "dark": "./icon.png"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "helmtk",
+        "scopeName": "source.helmtk",
+        "path": "./syntaxes/helmtk.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "helmtk.runAllTests",
+        "title": "Helmtk: Run All Tests",
+        "icon": "$(play)"
+      },
+      {
+        "command": "helmtk.runTestFile",
+        "title": "Helmtk: Run Test File",
+        "icon": "$(play)"
+      },
+      {
+        "command": "helmtk.runSingleTest",
+        "title": "Helmtk: Run Single Test"
+      }
+    ],
+    "configuration": {
+      "title": "Helmtk",
+      "properties": {
+        "helmtk.binaryPath": {
+          "type": "string",
+          "default": "helmtk",
+          "description": "Path to the helmtk binary. Defaults to 'helmtk' in PATH."
+        }
+      }
+    },
+    "configurationDefaults": {
+      "[helmtk]": {
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false,
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "helmtk.helmtk"
+      }
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/buchanae/helmtk"
+  }
+}

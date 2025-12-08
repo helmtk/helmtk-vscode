@@ -1,0 +1,151 @@
+# Helmtk Syntax Highlighting Test File
+# This file demonstrates all syntax highlighting features
+
+# Define templates
+define("commonLabels", app) {
+  app: app
+  version: "1.0"
+  managedBy: "helm"
+}
+
+define("envVars", name) do
+  let prefix = "APP_"
+  let logLevel = "info"
+
+  [
+    {name: prefix + "NAME", value: name}
+    {name: prefix + "LOG_LEVEL", value: logLevel}
+
+    if Values.debug do
+      {name: prefix + "DEBUG", value: "true"}
+    end
+  ]
+end
+
+# Main configuration
+apiVersion: "apps/v1"
+kind: "Deployment"
+
+metadata: {
+  name: Values.name
+  namespace: Release.Namespace
+  labels: include("commonLabels", Values.name)
+
+  # Multiline string
+  annotations: {
+    description: """
+This is a multiline string.
+It can span multiple lines.
+Useful for YAML or scripts.
+"""
+  }
+}
+
+spec: {
+  # Numbers and arithmetic
+  replicas: Values.replicas || 3
+  minReplicas: Values.replicas - 1
+  maxReplicas: Values.replicas * 2
+
+  # Comparison operators
+  enabled: Values.count > 0 && Values.count <= 100
+
+  selector: {
+    matchLabels: include("commonLabels", Values.name)
+  }
+
+  template: {
+    metadata: {
+      labels: include("commonLabels", Values.name)
+    }
+
+    spec: {
+      # Spread operator
+      volumes: [
+        spread Values.extraVolumes
+        {name: "config", configMap: {name: "app-config"}}
+      ]
+
+      containers: [
+        {
+          name: Values.name
+
+          # String interpolation
+          image: "${Values.registry}/${Values.image}:${Values.tag}"
+
+          # Nested if-else
+          command: if Values.mode == "debug" do
+            ["/bin/sh", "-c", "sleep infinity"]
+          else if Values.mode == "test" do
+            ["/bin/sh", "-c", "npm test"]
+          else
+            ["/app/run.sh"]
+          end
+
+          ports: [
+            {name: "http", containerPort: 8080}
+
+            # Conditional port
+            if Values.metrics.enabled do
+              {name: "metrics", containerPort: 9090}
+            end
+          ]
+
+          # For loop
+          env: for k, v in Values.env do
+            {name: k, value: v}
+          end
+
+          # Function calls and pipe operator
+          envFrom: Values.secretRefs | toYaml | nindent(12)
+
+          # Null and booleans
+          stdin: null
+          tty: false
+          securityContext: {
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+          }
+
+          resources: if Values.resources != null do
+            Values.resources
+          else
+            {
+              limits: {
+                cpu: "100m"
+                memory: "128Mi"
+              }
+              requests: {
+                cpu: "50m"
+                memory: "64Mi"
+              }
+            }
+          end
+        }
+      ]
+    }
+  }
+}
+
+# Array operations
+allPorts: [
+  80
+  443
+  spread Values.customPorts
+  8080
+]
+
+# Complex expressions
+result: (Values.a + Values.b) * 2 | round | quote
+chained: getData().filter(isValid).map(transform)
+
+# Break and continue
+filtered: for i, item in items do
+  if item == null do
+    continue
+  end
+  if i >= 10 do
+    break
+  end
+  item | upper
+end

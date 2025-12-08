@@ -1,0 +1,47 @@
+# Sample Helm values file for testing Go to Definition
+
+# Application name
+name: my-app
+
+# Number of replicas
+replicas: 3
+count: 10
+
+# Container registry settings
+registry: docker.io
+image: nginx
+tag: latest
+mode: production
+
+# Feature flags
+debug: false
+
+# Metrics configuration
+metrics:
+  enabled: true
+  port: 9090
+
+# Resource limits and requests
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
+# Environment variables
+env:
+  LOG_LEVEL: info
+  DEBUG: false
+
+# Additional volumes
+extraVolumes: []
+
+# Custom ports
+customPorts:
+  - 8080
+  - 8443
+
+# Secret references
+secretRefs: []
