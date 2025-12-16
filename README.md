@@ -1,6 +1,6 @@
 # Helmtk VS Code Extension
 
-A VS Code extension providing comprehensive language support for [Helmtk](https://github.com/buchanae/helmtk), a template language for Helm charts.
+A VS Code extension providing comprehensive language support for [Helmtk](https://helmtk.dev), a template language for Helm charts.
 
 ## Features
 
